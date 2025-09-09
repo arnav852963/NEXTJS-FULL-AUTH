@@ -12,6 +12,7 @@ const db = async ()=>{
     try {
         const response =await  mongoose.connect(process.env.MONGODB_URL!)
         const connection = mongoose.connection
+        console.log("connection details....   ",connection)
 
         connection.on('connected' , ()=>{
             console.log("mongodb connected")

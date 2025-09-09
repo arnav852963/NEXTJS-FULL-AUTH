@@ -10,6 +10,7 @@ export default function SignupPage(){
         password:"",
         username:""
     })
+    const [showPassword, setShowPassword] = React.useState(false);
 
     const onSignUp = async ()=>{
 
@@ -63,15 +64,29 @@ export default function SignupPage(){
             />
 
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">passwords</label>
-            <input
-                id="password"
-                type="password"
-                value={user.password}
-                onChange={(e) => setUser({...user, password: e.target.value})}
-                placeholder="password"
-                className="w-full px-4 py-2 bg-white text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            <div className="relative">
+                <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={user.password}
+                    onChange={(e) => setUser({...user, password: e.target.value})}
+                    placeholder="password"
+                    className="w-full px-4 py-2 pr-12 bg-white text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 
-            />
+                />
+                <button
+                    type="button"
+                    onMouseDown={() => setShowPassword(true)}
+                    onMouseUp={() => setShowPassword(false)}
+                    onMouseLeave={() => setShowPassword(false)}
+                    className="absolute inset-y-0 right-3 flex items-center text-sm text-blue-600"
+                >
+                    👁️
+
+
+                </button>
+
+            </div>
 
             <button
                 onClick={onSignUp}
@@ -79,8 +94,9 @@ export default function SignupPage(){
                 Signup
             </button>
 
-            <Link href="/login"> visit login page</Link>
+            <Link href="/login" className="block text-sm font-medium text-gray-700 mb-1"> visit login page</Link>
         </div>
         </div>
+
     )
 }

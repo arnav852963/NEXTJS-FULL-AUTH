@@ -1,20 +1,47 @@
 "use client";
 import Link from "next/link"
 import React from "react";
+import {useEffect} from "react";
 import {useRouter} from "next/navigation"
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function SignupPage(){
+    const router = useRouter()
     const [user , setUser] = React.useState({
         email:"",
         password:"",
         username:""
     })
+
+    const [buttonDisabled, setButtonDisabled] = React.useState(false);
+
     const [showPassword, setShowPassword] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const onSignUp = async ()=>{
+        try {
+            setLoading(true)
+           const response = await axios.post("/api/users/signup",user)
+            router.push("/login")
+
+        } catch (e:any){
+            console.log("signup failed" , e.message)
+            toast.error(e.message)
+
+        }finally {
+            setLoading(false)
+        }
 
     }
+    useEffect(()=>{
+        if (user.email.length>0 && user.password.length>0 && user.username.length>0){
+            setButtonDisabled(false)
+        }else {
+            setButtonDisabled(true)
+        }
+
+    },[user])
 
     return(
         <div  className="min-h-screen flex items-center justify-center bg-black"
@@ -39,7 +66,7 @@ export default function SignupPage(){
                 />
             </div>
 
-            <h1 className="text-center text-black text-2xl">Signup</h1>
+            <h1 className="text-center text-black text-2xl">{loading ? "processing" : "signup"}</h1>
             <hr/>
             <label htmlFor="username"  className="block text-sm font-medium text-gray-700 mb-1">username</label>
             <input
@@ -91,7 +118,7 @@ export default function SignupPage(){
             <button
                 onClick={onSignUp}
                 className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition">
-                Signup
+                {buttonDisabled ? "NOPE" : "Signup"}
             </button>
 
             <Link href="/login" className="block text-sm font-medium text-gray-700 mb-1"> visit login page</Link>

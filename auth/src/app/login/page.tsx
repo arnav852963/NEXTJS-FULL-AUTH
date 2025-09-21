@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link"
-import React from "react";
+import React, {useEffect} from "react";
 import {useRouter} from "next/navigation"
 import axios from "axios";
-import {Text} from ""
+import toast from "react-hot-toast";
+
 
 export default function Login(){
     const [user , setUser] = React.useState({
@@ -11,16 +12,40 @@ export default function Login(){
         password:"",
 
     })
+    const router = useRouter()
+
+    const [buttonDisabled, setButtonDisabled] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const onSignUp = async ()=>{
+    const onLogin = async ()=>{
+        try {
+            setLoading(true)
+            const response  = await axios.post("/api/users/login",user)
+            console.log(response)
+
+            toast.success("login successful")
+            router.push("/profile")
+
+        } catch (e:any){
+            toast.error(e.message)
+        } finally {
+            setLoading(false)
+        }
 
     }
+    useEffect(()=>{
+        if( user.email.length>0 && user.password.length>0){
+            setButtonDisabled(false)
+        }else {
+            setButtonDisabled(true)
+        }
+    })
 
     return(
         <div  className="min-h-screen flex items-center justify-center bg-black">
         <div className="w-full max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg space-y-6">
-            <h1 className="text-center text-white text-2xl">Login</h1>
+            <h1 className="text-center text-black text-2xl">{loading ? "processing" : "Login"}</h1>
             <hr/>
 
 
@@ -53,7 +78,7 @@ export default function Login(){
                     onMouseLeave={() => setShowPassword(false)}
                     className="absolute inset-y-0 right-3 flex items-center text-sm text-blue-600"
                 >
-                    👁️
+                    👁view
 
 
                 </button>
@@ -61,9 +86,9 @@ export default function Login(){
             </div>
 
             <button
-                onClick={onSignUp}
+                onClick={onLogin}
                 className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition">
-                Signup
+                {buttonDisabled ? "NOPE" : "Login"}
             </button>
 
             <Link href="/signup"  className="block text-sm font-medium text-gray-700 mb-1"> visit Signup page</Link>

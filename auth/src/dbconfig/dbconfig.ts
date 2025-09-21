@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import {DBNAME} from "../../constants";
 import {error} from "next/dist/build/output/log";
 dotenv.config({
-    path:"./.env"
+    path:"../.env"
 })
 console.log(process.env.MONGODB_URL)
 
